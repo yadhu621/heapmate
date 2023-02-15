@@ -5,8 +5,10 @@ WORKDIR /app
 COPY heapmate/ /app/
 RUN mvn package
 RUN ls -la /app/target/
-RUN export APP_NAME=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout) && \
-    export APP_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+ARG APP_NAME=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+ARG APP_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+RUN echo $APP_NAME && echo $APP_VERSION
+
 
 # Stage 2: Build the final image
 FROM eclipse-temurin:17-jdk-alpine
