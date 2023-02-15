@@ -1,4 +1,4 @@
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: feeds-emea.axadmin.net/devops/java/heapmate
