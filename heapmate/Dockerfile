@@ -4,10 +4,9 @@ FROM maven:3.8.5-openjdk-17-slim AS build
 WORKDIR /app
 COPY heapmate/ /app/
 RUN mvn package
-ENV APP_NAME=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-ENV APP_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-RUN echo $APP_NAME && echo $APP_VERSION
-
+RUN ls -la /app/target/
+ARG APP_NAME=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+ARG APP_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
 
 # Stage 2: Build the final image
 FROM eclipse-temurin:17-jdk-alpine
