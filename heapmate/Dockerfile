@@ -9,8 +9,11 @@ ARG APP_NAME=sampleapp
 ARG APP_VERSION=1.0.0
 RUN echo $APP_NAME $APP_VERSION
 
-ARG APP_NAME=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-ARG APP_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+RUN mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout
+RUN mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+
+# ARG APP_NAME=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+# ARG APP_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
 RUN echo $APP_NAME $APP_VERSION
 
 # Stage 2: Build the final image
