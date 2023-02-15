@@ -4,7 +4,6 @@ FROM maven:3.8.5-openjdk-17-slim AS build
 WORKDIR /app
 COPY heapmate/ /app/
 RUN mvn package
-RUN ls -la /app/target/
 ENV APP_NAME=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
 ENV APP_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
 RUN echo $APP_NAME && echo $APP_VERSION
