@@ -18,6 +18,65 @@ jobs:
       dockerfile: heapmate-source-code/heapmate/Dockerfile
       tag: version/version
 
+- name: deploy-eudc01-tkg-shared-np
+  plan:
+  - get : heapmate-source-code
+  - get : heapmate-docker-image
+    passed : [build-and-push]
+    trigger: true
+  - get: version
+  - task: deploy
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: 
+          repository: feeds-emea.axadmin.net/devops/library/helm
+          tag: "3.8"
+          username: ((proget-user))
+          password: ((proget-password))
+      inputs:
+      - name: heapmate-source-code
+      - name: heapmate-docker-image
+      - name: version
+      run:
+        path: sh
+        args:
+        - -c
+        - |
+
+          echo ""
+          echo "Initializing kubectl..."
+
+          mkdir -p /root/.kube
+          ca_path="/root/.kube/ca.crt"
+          echo "$cluster_ca" | base64 -d > $ca_path
+
+          kubectl config set-cluster $cluster_name --server=$cluster_url --certificate-authority=$ca_path
+          kubectl config set-credentials $cluster_user --token=$concourse_deployer_token
+          kubectl config set-context $cluster_name-$cluster_user --cluster=$cluster_name --user=$cluster_user
+          kubectl config use-context $cluster_name-$cluster_user
+          
+          kubectl cluster-info
+          kubectl version
+
+          echo ""
+          echo "Creating helm package from helm chart..."
+
+          mkdir helm-package
+          export IMAGEVERSION=$(cat version/version)
+          helm package --version $IMAGEVERSION --debug -d helm-package heapmate-source-code/helm/heapmate
+          helm upgrade --namespace default --set "image.tag=$IMAGEVERSION" --wait --timeout 120s --install --debug $deployment helm-package/$package-$IMAGEVERSION.tgz
+
+      params:
+        cluster_name: eudc01-tkg-shared-np
+        cluster_url: https://10.142.65.10:6443
+        cluster_ca: ((eudc01-tkg-shared-np-ca))
+        cluster_user: concourse-deployer
+        concourse_deployer_token: ((eudc01-tkg-shared-np-concourse-deployer-token))
+        package: heapmate
+        deployment: heapmate
+
 resources:
 - name: heapmate-source-code
   type: git
