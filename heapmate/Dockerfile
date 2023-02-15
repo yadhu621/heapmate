@@ -3,8 +3,8 @@
 FROM maven:3.8.5-openjdk-17-slim AS build
 WORKDIR /app
 COPY heapmate/ /app/
-RUN ls -la /app/target/
 RUN mvn package
+RUN ls -la /app/target/
 RUN export APP_NAME=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout) && \
     export APP_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
 
