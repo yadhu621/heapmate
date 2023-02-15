@@ -98,6 +98,6 @@ resources:
 - name: heapmate-docker-image
   type: docker-image
   source:
-    repository: feeds-emea.axadmin.net/devops/go/heapmate
+    repository: feeds-emea.axadmin.net/devops/java/heapmate
     username: ((proget-user))
     password: ((proget-password))
