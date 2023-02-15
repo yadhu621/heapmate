@@ -1,3 +1,23 @@
+groups:
+- name: heapmate
+  jobs:
+  - build-and-push
+  - deploy-eudc01-tkg-shared-np
+
+jobs:
+- name: build-and-push
+  plan:
+  - in_parallel:
+      steps:
+      - get: heapmate-source-code
+      - get: version
+  - put: push-docker-image
+    resource: heapmate-docker-image
+    params:
+      build: heapmate-source-code
+      dockerfile: heapmate-source-code/heapmate/Dockerfile
+      tag: version/version
+
 resources:
 - name: heapmate-source-code
   type: git
