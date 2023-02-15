@@ -1,6 +1,6 @@
 # Stage 1: Build the application
 # Stage 1: Build the application
-FROM maven:3.6.1-openjdk-17-slim AS build
+FROM maven:3.8.5-openjdk-17-slim AS build
 WORKDIR /app
 COPY src/ /app/src/
 RUN mvn package
