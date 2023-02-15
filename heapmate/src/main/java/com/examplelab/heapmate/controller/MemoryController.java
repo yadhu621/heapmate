@@ -19,4 +19,19 @@ public class MemoryController {
   public void allocateMemory(@RequestParam("value") long value) {
     byte[] bytes = new byte[(int) value * 1024 * 1024];
   }
+
+  @PostMapping("/memory/dialup")
+  public void dialUp(@RequestParam("value") long value) {
+    Runtime runtime = Runtime.getRuntime();
+    long currentMemoryUsage = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
+    byte[] bytes = new byte[(int) (currentMemoryUsage + value) * 1024 * 1024];
+    }
+
+  @PostMapping("/memory/dialdown")
+  public void dialDown(@RequestParam("value") long value) {
+    Runtime runtime = Runtime.getRuntime();
+    long currentMemoryUsage = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
+    byte[] bytes = new byte[(int) (currentMemoryUsage - value) * 1024 * 1024];
+    }
+  
 }
