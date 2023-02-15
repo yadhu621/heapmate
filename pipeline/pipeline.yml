@@ -1,0 +1,24 @@
+resources:
+- name: heapmate-source-code
+  type: git
+  source:
+    uri: https://gitlab.axadmin.net/DevOps/tkg/automation/heapmate.git
+    username: ((gitlab-user))
+    password: ((gitlab-password))
+
+- name: version
+  type: semver
+  source:
+    driver: git
+    uri: https://gitlab.axadmin.net/DevOps/tkg/automation/heapmate.git
+    username: ((gitlab-user))
+    password: ((gitlab-password))
+    branch: version
+    file: version
+
+- name: heapmate-docker-image
+  type: docker-image
+  source:
+    repository: feeds-emea.axadmin.net/devops/go/heapmate
+    username: ((proget-user))
+    password: ((proget-password))
